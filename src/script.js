@@ -80,6 +80,8 @@ const matcapTexture = textureLoader.load('../static/textures/matcaps/3.png');
 const gradientTexture = textureLoader.load('../static/textures/gradients/5.jpg');
 doorColorTexture.colorSpace = THREE.SRGBColorSpace;
 matcapTexture.colorSpace = THREE.SRGBColorSpace;
+const backShadow = textureLoader.load('../static/textures/bakedShadow.jpg');
+const simpleShadow = textureLoader.load('../static/textures/simpleShadow.jpg');
 // // 创建字体
 // const fontLoader = new FontLoader();
 // fontLoader.load('../static/fonts/helvetiker_regular.typeface.json', (font) => {
@@ -231,6 +233,7 @@ const sphere = new THREE.Mesh(
   new THREE.SphereGeometry(0.5, 32, 32),
   material
 )
+sphere.castShadow = true
 // sphere.position.x = -1.5;
 const cube = new THREE.Mesh(
   new THREE.BoxGeometry(0.75, 0.75, 0.75),
@@ -246,8 +249,24 @@ const plane = new THREE.Mesh(
   material
 )
 plane.rotation.x = -Math.PI * 0.5;
-plane.position.y = -0.65;
+plane.position.y = -0.5;
+
+plane.receiveShadow = true;
+
 scene.add(sphere, plane);
+
+// const sphereShadow = new THREE.Mesh(
+//   new THREE.PlaneGeometry(1.5, 1.5),
+//   new THREE.MeshBasicMaterial({
+//     color: 0x000000,
+//     transparent: true,
+//     alphaMap: simpleShadow
+//   })
+// )
+// sphereShadow.rotation.x = -Math.PI * 0.5;
+// sphereShadow.position.y = plane.position.y + 0.01;
+// scene.add(sphereShadow);
+
 // 网格模型添加到场景中
 // scene.add(cube);
 // cube.position.set(0.7, -0.6, 1)
@@ -289,7 +308,7 @@ cubeTweaks
   })
 // 创建光源
 // 环境光
-const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
 scene.add(ambientLight);
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.01);
 // // 平行光
@@ -327,9 +346,61 @@ gui.add(ambientLight, 'intensity').min(0).max(1).step(0.01);
 // const rectAreaLightHelper = new RectAreaLightHelper(rectAreaLight);
 // scene.add(rectAreaLightHelper);
 
-const pointLight = new THREE.PointLight(0xffffff, 30);
-pointLight.position.set(2, 3, 4);
-scene.add(pointLight);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.3);
+directionalLight.position.set(2, 2, -1);
+gui.add(directionalLight, 'intensity').min(0).max(1).step(0.001);
+gui.add(directionalLight.position, 'x').min(-5).max(5).step(0.001);
+gui.add(directionalLight.position, 'y').min(-5).max(5).step(0.001);
+gui.add(directionalLight.position, 'z').min(-5).max(5).step(0.001);
+scene.add(directionalLight);
+
+directionalLight.castShadow = true;
+directionalLight.shadow.mapSize.width = 1024;
+directionalLight.shadow.mapSize.height = 1024;
+directionalLight.shadow.camera.left = -2;
+directionalLight.shadow.camera.right = 2;
+directionalLight.shadow.camera.top = 2;
+directionalLight.shadow.camera.bottom = -2;
+directionalLight.shadow.camera.near = 1;
+directionalLight.shadow.camera.far = 6;
+directionalLight.shadow.radius = 10;
+
+const directionalLightCameraHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+directionalLightCameraHelper.visible = false;
+scene.add(directionalLightCameraHelper);
+
+// const spotLight = new THREE.SpotLight(0xffffff, 0.6, 10, Math.PI * 0.3);
+
+// spotLight.castShadow = true;
+// spotLight.shadow.mapSize.width = 1024;
+// spotLight.shadow.mapSize.height = 1024;
+// spotLight.shadow.camera.fov = 30;
+// spotLight.shadow.camera.near = 1;
+// spotLight.shadow.camera.far = 6;
+
+// spotLight.position.set(0, 2, 2);
+// scene.add(spotLight);
+// scene.add(spotLight.target);
+
+// const spotLightCameraHelper = new THREE.CameraHelper(spotLight.shadow.camera);
+// spotLightCameraHelper.visible = false;
+// scene.add(spotLightCameraHelper);
+
+// const pointLight = new THREE.PointLight(0xffffff, 1);
+
+// pointLight.castShadow = true;
+// pointLight.shadow.mapSize.width = 1024;
+// pointLight.shadow.mapSize.height = 1024;
+// pointLight.shadow.camera.near = 0.1;
+// pointLight.shadow.camera.far = 5;
+
+// pointLight.position.set(-1, 1, 0);
+// scene.add(pointLight);
+
+// const pointLightCameraHelper = new THREE.CameraHelper(pointLight.shadow.camera);
+// pointLightCameraHelper.visible = false;
+// scene.add(pointLightCameraHelper);
+
 // 创建环境贴图
 // const rgbeLoader = new RGBELoader();
 // rgbeLoader.load('../static/textures/environmentMap/2k.hdr', (environmentMap) => {
@@ -393,6 +464,9 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+renderer.shadowMap.enabled = false;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
 // gsap.to(cube.position, {
 //   duration: 1,
 //   delay: 1,
@@ -412,6 +486,15 @@ const tick = () => {
   // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
   // camera.position.y = cursor.y * 5;
   // camera.lookAt(cube.position);
+
+  // sphere.position.x = Math.cos(elapsedTime) * 1.5;
+  // sphere.position.z = Math.sin(elapsedTime) * 1.5;
+  // sphere.position.y = Math.abs(Math.sin(elapsedTime * 3));
+
+  // sphereShadow.position.x = sphere.position.x;
+  // sphereShadow.position.z = sphere.position.z;
+  // sphereShadow.material.opacity = (1 - sphere.position.y) * 0.3;
+
   sphere.rotation.y = 0.1 * elapsedTime;
   cube.rotation.y = 0.1 * elapsedTime;
   torus.rotation.y = 0.1 * elapsedTime;
