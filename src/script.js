@@ -4,6 +4,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
+import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
 import gsap from "gsap";
 import GUI from "lil-gui";
 
@@ -68,67 +69,68 @@ const loadingManager = new THREE.LoadingManager();
 //   console.log('loading onError');
 // }
 const textureLoader = new THREE.TextureLoader(loadingManager);
-// const doorColorTexture = textureLoader.load('../static/textures/door/color.jpg');
-// const doorAlphaTexture = textureLoader.load('../static/textures/door/alpha.jpg');
-// const doorAmbientOcclusionTexture = textureLoader.load('../static/textures/door/ambientOcclusion.jpg');
-// const doorHeightTexture = textureLoader.load('../static/textures/door/height.jpg');
-// const doorNormalTexture = textureLoader.load('../static/textures/door/normal.jpg');
-// const doorMetalnessTexture = textureLoader.load('../static/textures/door/metalness.jpg');
-// const doorRoughnessTexture = textureLoader.load('../static/textures/door/roughness.jpg');
+const doorColorTexture = textureLoader.load('../static/textures/door/color.jpg');
+const doorAlphaTexture = textureLoader.load('../static/textures/door/alpha.jpg');
+const doorAmbientOcclusionTexture = textureLoader.load('../static/textures/door/ambientOcclusion.jpg');
+const doorHeightTexture = textureLoader.load('../static/textures/door/height.jpg');
+const doorNormalTexture = textureLoader.load('../static/textures/door/normal.jpg');
+const doorMetalnessTexture = textureLoader.load('../static/textures/door/metalness.jpg');
+const doorRoughnessTexture = textureLoader.load('../static/textures/door/roughness.jpg');
 const matcapTexture = textureLoader.load('../static/textures/matcaps/3.png');
-// const gradientTexture = textureLoader.load('../static/textures/gradients/5.jpg');
-// doorColorTexture.colorSpace = THREE.SRGBColorSpace;
+const gradientTexture = textureLoader.load('../static/textures/gradients/5.jpg');
+doorColorTexture.colorSpace = THREE.SRGBColorSpace;
 matcapTexture.colorSpace = THREE.SRGBColorSpace;
-// 创建字体
-const fontLoader = new FontLoader();
-fontLoader.load('../static/fonts/helvetiker_regular.typeface.json', (font) => {
-  const textGeometry = new TextGeometry('Hello Three.js', {
-    font: font,
-    size: 0.5,
-    depth: 0.2,
-    curveSegments: 6,
-    bevelEnabled: true,
-    bevelThickness: 0.03,
-    bevelSize: 0.02,
-    bevelOffset: 0,
-    bevelSegments: 3
-  });
-  // textGeometry.computeBoundingBox();
-  // textGeometry.translate(
-  //   (0.02 - textGeometry.boundingBox.max.x) * 0.5,
-  //   (0.02 - textGeometry.boundingBox.max.y) * 0.5,
-  //   (0.03 - textGeometry.boundingBox.max.z) * 0.5
-  // );
-  textGeometry.center();
+// // 创建字体
+// const fontLoader = new FontLoader();
+// fontLoader.load('../static/fonts/helvetiker_regular.typeface.json', (font) => {
+//   const textGeometry = new TextGeometry('Hello Three.js', {
+//     font: font,
+//     size: 0.5,
+//     depth: 0.2,
+//     curveSegments: 6,
+//     bevelEnabled: true,
+//     bevelThickness: 0.03,
+//     bevelSize: 0.02,
+//     bevelOffset: 0,
+//     bevelSegments: 3
+//   });
+//   // textGeometry.computeBoundingBox();
+//   // textGeometry.translate(
+//   //   (0.02 - textGeometry.boundingBox.max.x) * 0.5,
+//   //   (0.02 - textGeometry.boundingBox.max.y) * 0.5,
+//   //   (0.03 - textGeometry.boundingBox.max.z) * 0.5
+//   // );
+//   textGeometry.center();
 
-  const material = new THREE.MeshMatcapMaterial();
-  material.matcap = matcapTexture;
-  const text = new THREE.Mesh(textGeometry, material);
-  scene.add(text);
+//   const material = new THREE.MeshMatcapMaterial();
+//   material.matcap = matcapTexture;
+//   const text = new THREE.Mesh(textGeometry, material);
+//   scene.add(text);
 
-  console.time('donuts');
-  const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45);
+//   console.time('donuts');
+//   const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45);
 
-  for (let i = 0; i < 100; i++) {
-    const donut = new THREE.Mesh(donutGeometry, material);
+//   for (let i = 0; i < 100; i++) {
+//     const donut = new THREE.Mesh(donutGeometry, material);
 
-    donut.position.x = (Math.random() - 0.5) * 10;
-    donut.position.y = (Math.random() - 0.5) * 10;
-    donut.position.z = (Math.random() - 0.5) * 10;
+//     donut.position.x = (Math.random() - 0.5) * 10;
+//     donut.position.y = (Math.random() - 0.5) * 10;
+//     donut.position.z = (Math.random() - 0.5) * 10;
 
-    donut.rotation.x = Math.random() * Math.PI;
-    donut.rotation.y = Math.random() * Math.PI;
+//     donut.rotation.x = Math.random() * Math.PI;
+//     donut.rotation.y = Math.random() * Math.PI;
 
-    const scale = Math.random();
-    donut.scale.set(scale, scale, scale);
-    scene.add(donut);
-  }
+//     const scale = Math.random();
+//     donut.scale.set(scale, scale, scale);
+//     scene.add(donut);
+//   }
 
-  console.timeEnd('donuts');
-})
+//   console.timeEnd('donuts');
+// })
 // 创建材质
 debugObject.color = '#3a6ea6';
-const material = new THREE.MeshBasicMaterial();
+const material = new THREE.MeshStandardMaterial();
+material.roughness = 0.4;
 // material.map = doorColorTexture;
 // material.transparent = true;
 // material.opacity = 0.5;
@@ -224,22 +226,28 @@ const material = new THREE.MeshBasicMaterial();
 // gui.add(material, 'thickness').min(0).max(1).step(0.0001);
 
 // // 创建网格模型
-const cube = new THREE.Mesh(geometry, material);
-// const sphere = new THREE.Mesh(
-//   new THREE.SphereGeometry(0.5, 64, 64),
-//   material
-// )
+// const cube = new THREE.Mesh(geometry, material);
+const sphere = new THREE.Mesh(
+  new THREE.SphereGeometry(0.5, 32, 32),
+  material
+)
 // sphere.position.x = -1.5;
-// const plane = new THREE.Mesh(
-//   new THREE.PlaneGeometry(1, 1, 100, 100),
-//   material
-// )
-// const torus = new THREE.Mesh(
-//   new THREE.TorusGeometry(0.3, 0.2, 64, 128),
-//   material
-// )
-// torus.position.x = 1.5;
-// scene.add(sphere, plane, torus);
+const cube = new THREE.Mesh(
+  new THREE.BoxGeometry(0.75, 0.75, 0.75),
+  material
+);
+const torus = new THREE.Mesh(
+  new THREE.TorusGeometry(0.3, 0.2, 32, 64),
+  material
+)
+torus.position.x = 1.5;
+const plane = new THREE.Mesh(
+  new THREE.PlaneGeometry(5, 5),
+  material
+)
+plane.rotation.x = -Math.PI * 0.5;
+plane.position.y = -0.65;
+scene.add(sphere, plane);
 // 网格模型添加到场景中
 // scene.add(cube);
 // cube.position.set(0.7, -0.6, 1)
@@ -248,8 +256,8 @@ const cube = new THREE.Mesh(geometry, material);
 // cube.rotation.y = Math.PI * 0.25
 // cube.rotation.x = Math.PI * 0.25
 // 创建辅助坐标轴
-const axesHelper = new THREE.AxesHelper();
-scene.add(axesHelper);
+// const axesHelper = new THREE.AxesHelper();
+// scene.add(axesHelper);
 const cubeTweaks = gui.addFolder('Awesome cube')
 cubeTweaks.close()
 cubeTweaks
@@ -280,11 +288,48 @@ cubeTweaks
     );
   })
 // 创建光源
-// const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-// scene.add(ambientLight);
-// const pointLight = new THREE.PointLight(0xffffff, 30);
-// pointLight.position.set(2, 3, 4);
+// 环境光
+const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+scene.add(ambientLight);
+gui.add(ambientLight, 'intensity').min(0).max(1).step(0.01);
+// // 平行光
+// const directionalLight = new THREE.DirectionalLight(0x00fffc, 0.3);
+// directionalLight.position.set(1, 0.25, 0);
+// scene.add(directionalLight);
+// // 半球光
+// const hemisphereLight = new THREE.HemisphereLight(0xff0000, 0x0000ff, 0.3);
+// scene.add(hemisphereLight);
+// // 点光源
+// const pointLight = new THREE.PointLight(0xff9000, 0.5, 3);
+// pointLight.position.set(1, -0.5, 1);
 // scene.add(pointLight);
+// // 矩形区域光
+// const rectAreaLight = new THREE.RectAreaLight(0x4e00ff, 2, 1, 1);
+// rectAreaLight.position.set(-1.5, 0, 1.5);
+// rectAreaLight.lookAt(new THREE.Vector3());
+// scene.add(rectAreaLight);
+// // 聚光灯
+// const spotLight = new THREE.SpotLight(0x78ff00, 0.5, 10, Math.PI * 0.1, 0.25, 1);
+// spotLight.position.set(0, 2, 3);
+// scene.add(spotLight);
+// spotLight.target.position.x = -0.75;
+// scene.add(spotLight.target);
+
+// // 光源辅助对象
+// const hemisphereLightHelper = new THREE.HemisphereLightHelper(hemisphereLight, 0.2);
+// scene.add(hemisphereLightHelper);
+// const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 0.2);
+// scene.add(directionalLightHelper);
+// const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.2);
+// scene.add(pointLightHelper);
+// const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+// scene.add(spotLightHelper);
+// const rectAreaLightHelper = new RectAreaLightHelper(rectAreaLight);
+// scene.add(rectAreaLightHelper);
+
+const pointLight = new THREE.PointLight(0xffffff, 30);
+pointLight.position.set(2, 3, 4);
+scene.add(pointLight);
 // 创建环境贴图
 // const rgbeLoader = new RGBELoader();
 // rgbeLoader.load('../static/textures/environmentMap/2k.hdr', (environmentMap) => {
@@ -335,7 +380,7 @@ const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 
 camera.position.x = 2;
 camera.position.y = 2;
 camera.position.z = 3;
-camera.lookAt(cube.position);
+// camera.lookAt(cube.position);
 // 相机添加到场景中
 scene.add(camera);
 // 创建控制器
@@ -367,13 +412,13 @@ const tick = () => {
   // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
   // camera.position.y = cursor.y * 5;
   // camera.lookAt(cube.position);
-  // sphere.rotation.y = 0.1 * elapsedTime;
-  // plane.rotation.y = 0.1 * elapsedTime;
-  // torus.rotation.y = 0.1 * elapsedTime;
+  sphere.rotation.y = 0.1 * elapsedTime;
+  cube.rotation.y = 0.1 * elapsedTime;
+  torus.rotation.y = 0.1 * elapsedTime;
 
-  // sphere.rotation.x = -0.15 * elapsedTime;
-  // plane.rotation.x = -0.15 * elapsedTime;
-  // torus.rotation.x = -0.15 * elapsedTime;
+  sphere.rotation.x = -0.15 * elapsedTime;
+  cube.rotation.x = -0.15 * elapsedTime;
+  torus.rotation.x = -0.15 * elapsedTime;
   // 更新控制器
   controls.update();
   renderer.render(scene, camera);
