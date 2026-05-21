@@ -1,4 +1,4 @@
-import './style.css'
+import '../css/style.css'
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
