@@ -465,7 +465,7 @@ renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 renderer.shadowMap.enabled = false;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.type = THREE.PCFShadowMap;
 
 // gsap.to(cube.position, {
 //   duration: 1,
@@ -478,10 +478,11 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 //   x: 0
 // })
 // 创建时钟
-const clock = new THREE.Clock();
+const timer = new THREE.Timer()
 // 动画
 const tick = () => {
-  const elapsedTime = clock.getElapsedTime();
+  timer.update()
+  const elapsedTime = timer.getElapsed()
   // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
   // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
   // camera.position.y = cursor.y * 5;

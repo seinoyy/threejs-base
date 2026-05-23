@@ -183,10 +183,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
 // 动画
 // 创建时钟
-const clock = new THREE.Clock()
+const timer = new THREE.Timer()
 
 const tick = () => {
-  const elapsedTime = clock.getElapsedTime()
+  timer.update()
+  const elapsedTime = timer.getElapsed()
 
   // // Update particles
   // for (let i = 0; i < count; i++) {

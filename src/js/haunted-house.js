@@ -273,7 +273,7 @@ renderer.setClearColor('#262837')
 
 // 创建阴影
 renderer.shadowMap.enabled = true
-renderer.shadowMap.type = THREE.PCFSoftShadowMap
+renderer.shadowMap.type = THREE.PCFShadowMap
 
 moonLight.castShadow = true
 doorLight.castShadow = true
@@ -333,10 +333,11 @@ window.addEventListener("dblclick", () => {
 
 // 动画
 // 创建时钟
-const clock = new THREE.Clock();
+const timer = new THREE.Timer()
 const tick = () => {
   // Timer
-  const elapsedTime = clock.getElapsedTime();
+  timer.update()
+  const elapsedTime = timer.getElapsed()
 
   const ghost1Angle = elapsedTime * 0.5
   ghost1.position.x = Math.cos(ghost1Angle) * 4

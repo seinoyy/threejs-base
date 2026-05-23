@@ -159,13 +159,11 @@ window.addEventListener("mousemove", (event) => {
 
 // 动画
 // 创建时钟
-const clock = new THREE.Clock()
-let previousTime = 0
+const timer = new THREE.Timer()
 
 const tick = () => {
-  const elapsedTime = clock.getElapsedTime()
-  const deltaTime = elapsedTime - previousTime
-  previousTime = elapsedTime
+  timer.update()
+  const deltaTime = timer.getDelta()
 
   // 更新滚动
   camera.position.y = -scrollY / sizes.height * objectDistance
