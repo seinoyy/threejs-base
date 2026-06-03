@@ -2,8 +2,8 @@ import '../css/style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import GUI from 'lil-gui'
-import testVertexShader from '@/shaders/color/vertex.glsl'
-import testFragmentShader from '@/shaders/color/fragment.glsl'
+import testVertexShader from '@/shaders/pattern/vertex.glsl'
+import testFragmentShader from '@/shaders/pattern/fragment.glsl'
 
 // 创建gui
 const gui = new GUI({
@@ -20,7 +20,6 @@ const scene = new THREE.Scene()
 
 // 创建纹理加载器
 const textureLoader = new THREE.TextureLoader()
-const flagTexture = textureLoader.load('../../static/textures/flag-french.jpg')
 
 /**
  * Test mesh
@@ -32,20 +31,11 @@ const geometry = new THREE.PlaneGeometry(1, 1, 32, 32)
 const material = new THREE.ShaderMaterial({
   vertexShader: testVertexShader,
   fragmentShader: testFragmentShader,
-  uniforms: {
-    uFrequency: { value: new THREE.Vector2(10, 5) },
-    uTime: { value: 0 },
-    uColor: { value: new THREE.Color('orange') },
-    uTexture: { value: flagTexture }
-  }
+  side: THREE.DoubleSide
 })
-
-gui.add(material.uniforms.uFrequency.value, 'x').min(0).max(20).step(0.01).name('frequencyX')
-gui.add(material.uniforms.uFrequency.value, 'y').min(0).max(20).step(0.01).name('frequencyY')
 
 // Mesh
 const mesh = new THREE.Mesh(geometry, material)
-mesh.scale.y = 2 / 3
 scene.add(mesh)
 
 // 三维空间大小
@@ -91,8 +81,6 @@ const tick = () => {
   timer.update()
   const elapsedTime = timer.getElapsed()
   const deltaTime = timer.getDelta()
-
-  material.uniforms.uTime.value = elapsedTime
 
   // Update controls
   controls.update()
