@@ -15,14 +15,35 @@ const canvas = document.querySelector("canvas.webgl")
 // 创建场景
 const scene = new THREE.Scene()
 
+// 创建坐标轴辅助器
+// const axesHelper = new THREE.AxesHelper()
+// axesHelper.position.y += 0.25
+// scene.add(axesHelper)
+
 /**
  * Test mesh
  */
 // Geometry
 const waterGeometry = new THREE.PlaneGeometry(2, 2, 512, 512)
+waterGeometry.deleteAttribute('normal')
+waterGeometry.deleteAttribute('uv')
 
-debugObject.depthColor = '#186691'
-debugObject.surfaceColor = '#9bd8ff'
+debugObject.depthColor = '#ff4000'
+debugObject.surfaceColor = '#151c37'
+
+gui
+  .addColor(debugObject, 'depthColor')
+  .name('depthColor')
+  .onChange(() => {
+    waterMaterial.uniforms.uDepthColor.value.set(debugObject.depthColor)
+  })
+
+gui
+  .addColor(debugObject, 'surfaceColor')
+  .name('surfaceColor')
+  .onChange(() => {
+    waterMaterial.uniforms.uSurfaceColor.value.set(debugObject.surfaceColor)
+  })
 
 // Material
 const waterMaterial = new THREE.ShaderMaterial({
@@ -42,8 +63,8 @@ const waterMaterial = new THREE.ShaderMaterial({
 
     uDepthColor: { value: new THREE.Color(debugObject.depthColor) },
     uSurfaceColor: { value: new THREE.Color(debugObject.surfaceColor) },
-    uColorOffset: { value: 0.08 },
-    uColorMultiplier: { value: 5 }
+    uColorOffset: { value: 0.925 },
+    uColorMultiplier: { value: 1 }
   }
 })
 
@@ -74,20 +95,6 @@ gui
   .max(4)
   .step(0.001)
   .name('uBigWavesSpeed')
-
-gui
-  .addColor(debugObject, 'depthColor')
-  .name('depthColor')
-  .onChange(() => {
-    waterMaterial.uniforms.uDepthColor.value.set(debugObject.depthColor)
-  })
-
-gui
-  .addColor(debugObject, 'surfaceColor')
-  .name('surfaceColor')
-  .onChange(() => {
-    waterMaterial.uniforms.uSurfaceColor.value.set(debugObject.surfaceColor)
-  })
 
 gui
   .add(waterMaterial.uniforms.uColorOffset, 'value')
@@ -169,6 +176,7 @@ controls.enableDamping = true
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas
 })
+renderer.toneMapping = THREE.ACESFilmicToneMapping
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
