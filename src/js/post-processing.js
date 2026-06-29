@@ -12,7 +12,6 @@ import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js'
 import { RGBShiftShader } from 'three/addons/shaders/RGBShiftShader.js'
 import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShader.js'
 import GUI from 'lil-gui'
-import { uniform } from 'three/tsl'
 
 // 创建gui
 const gui = new GUI()
